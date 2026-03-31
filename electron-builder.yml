@@ -1,0 +1,98 @@
+appId: com.appareldesignstudio.app
+productName: Apparel Design Studio
+copyright: Copyright © 2024 Apparel Design Studio
+
+directories:
+  output: release
+  buildResources: resources
+
+# Source files to package (venv excluded – users run setup scripts)
+# electron-vite v2 outputs to out/main, out/preload, out/renderer
+files:
+  - out
+  - "!backend/venv/**/*"
+  - "!backend/__pycache__/**/*"
+  - "!backend/**/*.pyc"
+  - "!**/*.bat"
+  - "!**/*.sh"
+
+# Backend Python source + data scaffolding go into the app's resources dir
+extraResources:
+  - from: backend
+    to: backend
+    filter:
+      - "**/*"
+      - "!venv/**/*"
+      - "!__pycache__/**/*"
+      - "!**/*.pyc"
+  - from: data
+    to: data
+    filter:
+      - ".gitkeep"
+
+# ── Windows ────────────────────────────────────────────────────────────────────
+win:
+  target:
+    - target: nsis      # Full installer (.exe)
+      arch: [x64, arm64]
+    - target: portable  # Standalone .exe (no install needed)
+      arch: [x64]
+  icon: resources/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Apparel Design Studio
+
+# ── macOS ──────────────────────────────────────────────────────────────────────
+mac:
+  target:
+    - target: dmg       # Drag-to-Applications disk image
+      arch: [x64, arm64]  # Intel + Apple Silicon (universal build)
+    - target: zip       # Bare .app zip (useful for auto-updater)
+      arch: [x64, arm64]
+  icon: resources/icon.icns
+  category: public.app-category.graphics-design
+  darkModeSupport: true
+  # Notarization: export APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, APPLE_TEAM_ID
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: resources/entitlements.mac.plist
+  entitlementsInherit: resources/entitlements.mac.plist
+
+dmg:
+  title: Apparel Design Studio
+  backgroundColor: "#0f0f13"
+  window:
+    width: 540
+    height: 380
+
+# ── Linux ──────────────────────────────────────────────────────────────────────
+linux:
+  target:
+    - target: AppImage   # Universal – runs on any distro, no install needed
+      arch: [x64, arm64]
+    - target: deb        # Debian / Ubuntu .deb package
+      arch: [x64]
+    - target: rpm        # Fedora / RHEL .rpm package
+      arch: [x64]
+  icon: resources/icon.png   # must be 512×512 PNG
+  category: Graphics
+  synopsis: AI-powered apparel design concept generator
+  description: >
+    Generate original apparel designs locally using Ollama + diffusers.
+    Includes copyright safety filtering, reference conditioning,
+    mockup preview, and a full export pipeline.
+  desktop:
+    Name: Apparel Design Studio
+    Comment: AI-powered apparel design concept generator
+    Categories: Graphics;ArtificialIntelligence;
+
+# ── Publish (optional – for GitHub Releases auto-update) ──────────────────────
+# publish:
+#   provider: github
+#   owner: your-github-username
+#   repo: apparel-design-studio

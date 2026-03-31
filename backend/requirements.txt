@@ -1,0 +1,23 @@
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+sqlalchemy==2.0.30
+alembic==1.13.1
+pydantic==2.7.1
+pydantic-settings==2.2.1
+python-multipart==0.0.9
+pillow==10.3.0
+requests==2.31.0
+aiofiles==23.2.1
+python-dotenv==1.0.1
+httpx==0.27.0
+# ── Image generation (optional — install separately) ────────────────────────
+# Install PyTorch first from https://pytorch.org/get-started/locally/
+# then run:
+#   pip install diffusers transformers accelerate safetensors
+#
+# Pinned versions that are known to work together:
+# diffusers==0.27.2
+# transformers==4.40.2
+# accelerate==0.30.0
+# safetensors==0.4.3       ← required for use_safetensors=True
+# xformers                 ← optional, NVIDIA GPU memory optimisation only
